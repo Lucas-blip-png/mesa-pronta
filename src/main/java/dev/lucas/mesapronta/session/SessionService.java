@@ -64,6 +64,11 @@ public class SessionService {
 	}
 
 	@Transactional(readOnly = true)
+	public List<Session> upcoming(String guildId) {
+		return sessions.findTop10ByGuildIdAndStartsAtAfterOrderByStartsAt(guildId, Instant.now(clock));
+	}
+
+	@Transactional(readOnly = true)
 	public Optional<Session> find(long sessionId) {
 		return sessions.findById(sessionId);
 	}

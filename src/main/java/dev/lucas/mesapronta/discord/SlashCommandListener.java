@@ -6,6 +6,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -45,6 +47,7 @@ class SlashCommandListener extends ListenerAdapter {
 		switch (event.getName()) {
 			case "agendar" -> schedule(event);
 			case "rolar" -> roll(event);
+			case "mesas" -> list(event);
 			default -> {
 			}
 		}
@@ -68,6 +71,26 @@ class SlashCommandListener extends ListenerAdapter {
 		catch (IllegalArgumentException e) {
 			event.reply(e.getMessage()).setEphemeral(true).queue();
 		}
+	}
+
+	private void list(SlashCommandInteractionEvent event) {
+		if (!event.isFromGuild()) {
+			event.reply("Esse comando só funciona dentro de um servidor.").setEphemeral(true).queue();
+			return;
+		}
+		List<Session> upcoming = sessions.upcoming(event.getGuild().getId());
+		if (upcoming.isEmpty()) {
+			event.reply("Nenhuma mesa agendada. Use /agendar para criar uma.").setEphemeral(true).queue();
+			return;
+		}
+		String lines = upcoming.stream()
+			.map(s -> "**#%d %s** — %s · %d/%d vagas".formatted(s.getId(), s.getTitle(),
+					TimeFormat.DATE_TIME_SHORT.format(s.getStartsAt().toEpochMilli()), sessions.attendees(s.getId()).size(),
+					s.getMaxPlayers()))
+			.collect(Collectors.joining("\n"));
+		event.replyEmbeds(new EmbedBuilder().setTitle("📅 Próximas mesas").setDescription(lines).build())
+			.setEphemeral(true)
+			.queue();
 	}
 
 	private void roll(SlashCommandInteractionEvent event) {

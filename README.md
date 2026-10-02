@@ -11,6 +11,7 @@ A Discord bot that schedules tabletop RPG sessions, tracks who's coming and remi
 - **`/agendar`**: schedule a session with title, date (`dd/MM/yyyy HH:mm`, America/Sao_Paulo) and number of seats.
 - **Attendance buttons**: players click **Confirmar** / **Sair** on the session message. The last seat can never be taken twice.
 - **Reminders**: the channel gets a message mentioning confirmed players 24h and 1h before the session.
+- **`/mesas`**: lists the next sessions scheduled in the server, with open seats.
 - **`/rolar`**: dice roller supporting expressions like `2d6+3`.
 
 ## Architecture
@@ -61,7 +62,7 @@ Integration tests use Testcontainers, so Docker must be running.
 ## Roadmap
 
 - [ ] Deploy on Railway
-- [ ] `/mesas` command to list upcoming sessions
+- [x] `/mesas` command to list upcoming sessions
 - [ ] Demo GIF
 
 ## License

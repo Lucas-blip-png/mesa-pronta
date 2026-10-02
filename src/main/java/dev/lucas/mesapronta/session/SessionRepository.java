@@ -12,6 +12,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
 
+	List<Session> findTop10ByGuildIdAndStartsAtAfterOrderByStartsAt(String guildId, Instant after);
+
 	/** SELECT ... FOR UPDATE: serializes concurrent joins on the same session. */
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("select s from Session s where s.id = :id")

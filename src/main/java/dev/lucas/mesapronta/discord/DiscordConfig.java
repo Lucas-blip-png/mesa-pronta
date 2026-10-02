@@ -33,6 +33,8 @@ public class DiscordConfig {
 								.setRequiredLength(16, 16),
 							new OptionData(OptionType.INTEGER, "vagas", "Número de vagas", true)
 								.setRequiredRange(1, SessionService.MAX_PLAYERS_LIMIT)),
+				Commands.slash("mesas", "Lista as próximas sessões deste servidor")
+					.setContexts(InteractionContextType.GUILD),
 				Commands.slash("rolar", "Rola dados, ex.: 2d6+3")
 					.addOptions(new OptionData(OptionType.STRING, "expressao", "Ex.: d20, 2d6+3, 4d8-1", true)
 						.setMaxLength(20)))
