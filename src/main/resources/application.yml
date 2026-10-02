@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: mesa-pronta
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/mesapronta}
+    username: ${DB_USER:mesapronta}
+    password: ${DB_PASSWORD:mesapronta}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  rabbitmq:
+    host: ${RABBIT_HOST:localhost}
+    port: ${RABBIT_PORT:5672}
+    username: ${RABBIT_USER:guest}
+    password: ${RABBIT_PASSWORD:guest}
+    listener:
+      simple:
+        default-requeue-rejected: false
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 2s
+          multiplier: 2
+
+discord:
+  # Discord-related beans only start when this is non-blank (see DiscordConfig.ENABLED)
+  token: ${DISCORD_TOKEN:}
+
+app:
+  zone: America/Sao_Paulo
+  reminders:
+    poll-interval: 60s
