@@ -33,7 +33,7 @@ flowchart LR
 
 - **No double booking on the last seat.** Joining runs in a transaction that locks the session row (`SELECT ... FOR UPDATE`) before counting seats, backed by a `UNIQUE(session_id, user_id)` constraint. An integration test fires 20 concurrent joins at a single seat and asserts exactly one succeeds.
 - **Polling + `SKIP LOCKED` instead of a TTL delay queue.** With per-message TTL, a 24h reminder at the head of the queue blocks the 1h reminders behind it (head-of-line blocking). A scheduler polls due sessions every minute with `FOR UPDATE SKIP LOCKED`, so multiple instances can run safely, and publishes them to RabbitMQ.
-- **Retry + dead-letter queue.** The consumer retries 3 times with exponential backoff, then the message is rejected to a DLX and parked in `reminders.dlq` for inspection instead of being lost or retried forever.
+- **Retry + dead-letter queue.** The consumer makes 3 attempts with exponential backoff, then the message is rejected to a DLX and parked in `reminders.dlq` for inspection instead of being lost or retried forever.
 
 ## Tech stack
 

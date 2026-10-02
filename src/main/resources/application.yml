@@ -19,7 +19,7 @@ spring:
         default-requeue-rejected: false
         retry:
           enabled: true
-          max-attempts: 3
+          max-retries: 2 # 3 attempts in total
           initial-interval: 2s
           multiplier: 2
 
